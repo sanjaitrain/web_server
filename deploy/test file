@@ -1,0 +1,34 @@
+kubectl create -f pv-1.yml
+kubectl get pv
+kubectl create -f pvc-claim.yml
+kubectl get pvc
+
+sass273491@inl00474:~/sanjai_train$ kubectl get deployments
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+centos-deployment   2/2     2            2           45m
+sass273491@inl00474:~/sanjai_train$ kubectl delete deployment centos-deployment
+deployment.apps "centos-deployment" deleted
+sass273491@inl00474:~/sanjai_train$ kubectl get pods
+NAME                                 READY   STATUS        RESTARTS   AGE
+centos-deployment-7cc6699bff-qfdz5   1/1     Terminating   0          16m
+centos-deployment-7cc6699bff-wsm49   1/1     Terminating   0          16m
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: task-pv-pod
+spec:
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: task-pv-claim
+  containers:
+    - name: task-pv-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: task-pv-storage

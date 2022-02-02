@@ -1,0 +1,78 @@
+YAML Maps
+---------
+
+Maps let you associate name-value pairs, 
+which of course is convenient when you’re trying to set up configuration information.  
+For example, you might have a config file that starts like this:
+
+---
+apiVersion: v1
+kind: Pod
+
+
+---- --> The first line is a separator, 
+and is optional unless you’re trying to define multiple structures in a single file.
+
+From there, as you can see, we have two values, v1 and Pod, mapped to two keys, apiVersion, and kind.
+
+Notice that in our YAML version, the quotation marks are optional; 
+the processor can tell that you’re looking at a string based on the formatting.
+
+You can also specify more complicated structures by creating a key that maps to another map, 
+rather than a string, as in:
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rss-site
+  labels:
+    app: web
+
+In this case, we have a key, metadata, that has as its value a map with 2 more keys, name and labels. 
+The labels key itself has a map as its value. You can nest these as far as you want to.
+
+The YAML processor knows how all of these pieces relate to each other because we’ve indented the lines. 
+In this example I’ve used 2 spaces for readability, but the number of spaces doesn’t matter — 
+as long as it’s at least 1, and as long as you’re CONSISTENT.  
+
+For example, name and labels are at the same indentation level, so the processor knows 
+they’re both part of the same map; it knows that app is a value for labels because it’s indented further.
+
+Quick note: NEVER use tabs in a YAML file.
+
+YAML lists
+-----------
+
+args:
+  - sleep
+  - "1000"
+  - message
+  - "Bring back Firefly!"
+
+As you can see here, you can have virtually any number of items in a list, 
+which is defined as items that start with a dash (-) indented from the parent.  
+So in JSON, this would be:
+{
+   "args": ["sleep", "1000", "message", "Bring back Firefly!"]
+}
+
+And of course, members of the list can also be maps:
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rss-site
+  labels:
+    app: web
+spec:
+  containers:
+    - name: front-end
+      image: nginx
+      ports:
+        - containerPort: 80
+    - name: rss-reader
+      image: nickchase/rss-php-nginx:v1
+      ports:
+        - containerPort: 88

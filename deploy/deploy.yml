@@ -14,9 +14,17 @@ spec:
       labels:
         app: centos
     spec:
+      volumes:
+        -name: task-pv-storage
+        persistentVolumeClaim:
+          claimName: pvc-claim-2
       containers:
       - name: centos
         image: centos:latest
         command: ["/bin/sleep", "3650d"]
         ports:
         - containerPort: 80
+        volumeMounts:
+          - mountPath: "/mnt/datadrive"
+            name: task-pv-storage
+
